@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TransitOps - Smart Transport Operations Platform</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Main App Layout -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <i data-lucide="activity" class="brand-icon"></i>
+        </div>
+        <div class="brand-text">
+          <h1>TransitOps</h1>
+          <span>Smart Fleet Management</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#dashboard" class="nav-link active" data-view="dashboard">
+              <i data-lucide="layout-dashboard"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#vehicles" class="nav-link" data-view="vehicles">
+              <i data-lucide="truck"></i>
+              <span>Vehicle Registry</span>
+            </a>
+          </li>
+          <li>
+            <a href="#drivers" class="nav-link" data-view="drivers">
+              <i data-lucide="users"></i>
+              <span>Drivers Management</span>
+            </a>
+          </li>
+          <li>
+            <a href="#trips" class="nav-link" data-view="trips">
+              <i data-lucide="navigation"></i>
+              <span>Trip Dispatch</span>
+            </a>
+          </li>
+          <li>
+            <a href="#maintenance" class="nav-link" data-view="maintenance">
+              <i data-lucide="wrench"></i>
+              <span>Maintenance Log</span>
+            </a>
+          </li>
+          <li>
+            <a href="#expenses" class="nav-link" data-view="expenses">
+              <i data-lucide="receipt"></i>
+              <span>Fuel & Expenses</span>
+            </a>
+          </li>
+          <li>
+            <a href="#reports" class="nav-link" data-view="reports">
+              <i data-lucide="bar-chart-3"></i>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="theme-toggle-container">
+          <span class="toggle-label">Dark Theme</span>
+          <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark mode">
+            <span class="toggle-icon"></span>
+          </button>
+        </div>
+        
+        <div class="current-role-card">
+          <div class="role-badge-container">
+            <span class="role-dot"></span>
+            <span id="sidebar-role-name">Fleet Manager</span>
+          </div>
+          <span class="role-sub">Active RBAC Role</span>
+        </div>
+
+        <button id="reset-system-btn" class="reset-system-btn btn-secondary-danger">
+          <i data-lucide="refresh-cw"></i> Reset Demo Data
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <h2 id="view-title">Dashboard Overview</h2>
+          <p id="view-subtitle" class="text-secondary">Real-time indicators and vehicle fleet analytics.</p>
+        </div>
+        
+        <div class="header-right">
+          <!-- Role Switcher (RBAC Tester) -->
+          <div class="role-switcher-container">
+            <label for="role-select">Simulate Role:</label>
+            <select id="role-select" class="role-select">
+              <option value="fleet_manager">Fleet Manager (All Access)</option>
+              <option value="driver">Driver (Trips & Vehicle View)</option>
+              <option value="safety_officer">Safety Officer (Driver Management)</option>
+              <option value="financial_analyst">Financial Analyst (Expenses & Reports)</option>
+            </select>
+          </div>
+          
+          <div class="time-display">
+            <i data-lucide="clock"></i>
+            <span id="current-time">12-Jul-2026 08:35 AM</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="view-viewport">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card" data-kpi="active-vehicles">
+              <div class="kpi-header">
+                <span class="kpi-title">Active Vehicles</span>
+                <i data-lucide="activity" class="kpi-icon color-blue"></i>
+              </div>
+              <div class="kpi-value" id="kpi-active-vehicles">0</div>
+              <p class="kpi-desc">Currently on route</p>
+            </div>
+            <div class="kpi-card" data-kpi="available-vehicles">
+              <div class="kpi-header">
+                <span class="kpi-title">Available Fleet</span>
+                <i data-lucide="check-circle-2" class="kpi-icon color-green"></i>
+              </div>
+              <div class="kpi-value" id="kpi-available-vehicles">0</div>
+              <p class="kpi-desc">Ready for dispatch</p>
+            </div>
+            <div class="kpi-card" data-kpi="maintenance-vehicles">
+              <div class="kpi-header">
+                <span class="kpi-title">In Shop (Maintenance)</span>
+                <i data-lucide="wrench" class="kpi-icon color-amber"></i>
+              </div>
+              <div class="kpi-value" id="kpi-maintenance-vehicles">0</div>
+              <p class="kpi-desc">Undergoing repairs</p>
+            </div>
+            <div class="kpi-card" data-kpi="active-trips">
+              <div class="kpi-header">
+                <span class="kpi-title">Active Trips</span>
+                <i data-lucide="milestone" class="kpi-icon color-indigo"></i>
+              </div>
+              <div class="kpi-value" id="kpi-active-trips">0</div>
+              <p class="kpi-desc">Dispatched loads</p>
+            </div>
+            <div class="kpi-card" data-kpi="pending-trips">
+              <div class="kpi-header">
+                <span class="kpi-title">Pending Trips</span>
+                <i data-lucide="clipboard-list" class="kpi-icon color-orange"></i>
+              </div>
+              <div class="kpi-value" id="kpi-pending-trips">0</div>
+              <p class="kpi-desc">Draft or scheduled</p>
+            </div>
+            <div class="kpi-card" data-kpi="drivers-on-duty">
+              <div class="kpi-header">
+                <span class="kpi-title">Drivers On Duty</span>
+                <i data-lucide="users" class="kpi-icon color-purple"></i>
+              </div>
+              <div class="kpi-value" id="kpi-drivers-on-duty">0</div>
+              <p class="kpi-desc">Assigned & active drivers</p>
+            </div>
+            <div class="kpi-card" data-kpi="utilization-rate">
+              <div class="kpi-header">
+                <span class="kpi-title">Fleet Utilization</span>
+                <i data-lucide="percent" class="kpi-icon color-teal"></i>
+              </div>
+              <div class="kpi-value" id="kpi-utilization-rate">0%</div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" id="kpi-utilization-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Filters -->
+          <div class="dashboard-filters-card card-premium">
+            <div class="card-header-flex">
+              <h3><i data-lucide="sliders-horizontal"></i> Filter Analytics & Fleet View</h3>
+            </div>
+            <div class="filters-grid">
+              <div class="form-group">
+                <label for="filter-vehicle-type">Vehicle Type</label>
+                <select id="filter-vehicle-type" class="form-control">
+                  <option value="">All Types</option>
+                  <option value="Mini Truck">Mini Truck</option>
+                  <option value="Pickup">Pickup</option>
+                  <option value="Light Truck">Light Truck</option>
+                  <option value="Heavy Truck">Heavy Truck</option>
+                  <option value="Van">Van</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="filter-vehicle-status">Vehicle Status</label>
+                <select id="filter-vehicle-status" class="form-control">
+                  <option value="">All Statuses</option>
+                  <option value="Available">Available</option>
+                  <option value="On Trip">On Trip</option>
+                  <option value="In Shop">In Shop</option>
+                  <option value="Retired">Retired</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="filter-region">Region</label>
+                <select id="filter-region" class="form-control">
+                  <option value="">All Regions</option>
+                  <option value="North">North</option>
+                  <option value="South">South</option>
+                  <option value="East">East</option>
+                  <option value="West">West</option>
+                </select>
+              </div>
+              <div class="filter-actions-group">
+                <button id="clear-dashboard-filters" class="btn-secondary">Clear Filters</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Charts Section -->
+          <div class="charts-row">
+            <div class="chart-container card-premium">
+              <h3>Fuel Efficiency (Distance / Fuel Liters)</h3>
+              <canvas id="fuel-efficiency-chart"></canvas>
+            </div>
+            <div class="chart-container card-premium">
+              <h3>Fleet Status Distribution</h3>
+              <canvas id="fleet-status-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="charts-row mt-4">
+            <div class="chart-container card-premium">
+              <h3>Operational Cost Breakdown (₹)</h3>
+              <canvas id="cost-breakdown-chart"></canvas>
+            </div>
+            <div class="chart-container card-premium">
+              <h3>Vehicle ROI (%)</h3>
+              <p class="formula-caption">Formula: (Revenue - (Maintenance + Fuel)) / Acquisition Cost</p>
+              <canvas id="roi-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Quick Fleet Registry Panel (on Dashboard) -->
+          <div class="card-premium mt-4">
+            <div class="card-header-flex">
+              <div>
+                <h3><i data-lucide="truck"></i> Active Fleet Overview & Quick Actions</h3>
+                <p class="text-secondary text-sm">Monitor all registered vehicles, add new units, or decommission them directly from the dashboard.</p>
+              </div>
+              <button id="dash-add-vehicle-btn" class="btn-primary rbac-write-vehicle">
+                <i data-lucide="plus-circle"></i> Quick Register Vehicle
+              </button>
+            </div>
+            
+            <div class="table-container mt-2">
+              <table class="data-table" id="dash-vehicles-table">
+                <thead>
+                  <tr>
+                    <th>Reg. Number</th>
+                    <th>Model/Name</th>
+                    <th>Type</th>
+                    <th>Max Capacity</th>
+                    <th>Odometer (km)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-vehicles-body">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. VEHICLE REGISTRY VIEW -->
+        <section id="view-vehicles" class="view-section">
+          <div class="action-header">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="search-vehicle-input" placeholder="Search by Reg Number or Name...">
+            </div>
+            <button id="add-vehicle-btn" class="btn-primary rbac-write-vehicle">
+              <i data-lucide="plus-circle"></i> Register Vehicle
+            </button>
+          </div>
+
+          <div class="table-container card-premium mt-4">
+            <table class="data-table" id="vehicles-table">
+              <thead>
+                <tr>
+                  <th>Reg. Number</th>
+                  <th>Vehicle Name/Model</th>
+                  <th>Type</th>
+                  <th>Region</th>
+                  <th>Max Capacity</th>
+                  <th>Odometer (km)</th>
+                  <th>Acquisition Cost (₹)</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="vehicles-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. DRIVER MANAGEMENT VIEW -->
+        <section id="view-drivers" class="view-section">
+          <div class="action-header">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="search-driver-input" placeholder="Search by Name or License Number...">
+            </div>
+            <button id="add-driver-btn" class="btn-primary rbac-write-driver">
+              <i data-lucide="user-plus"></i> Add Driver
+            </button>
+          </div>
+
+          <div class="table-container card-premium mt-4">
+            <table class="data-table" id="drivers-table">
+              <thead>
+                <tr>
+                  <th>Driver Name</th>
+                  <th>License Number</th>
+                  <th>Category</th>
+                  <th>License Expiry Date</th>
+                  <th>Contact Number</th>
+                  <th>Safety Score</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="drivers-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. TRIP DISPATCH VIEW -->
+        <section id="view-trips" class="view-section">
+          <div class="action-header">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="search-trip-input" placeholder="Search by Source, Destination, Driver...">
+            </div>
+            <button id="create-trip-btn" class="btn-primary rbac-write-trip">
+              <i data-lucide="plus-circle"></i> Create & Dispatch Trip
+            </button>
+          </div>
+
+          <!-- Active Dispatches Grid -->
+          <div class="section-divider mt-4">
+            <h3>Active Dispatches</h3>
+          </div>
+          <div class="active-trips-grid mt-2" id="active-trips-container">
+            <!-- Dynamically populated with active cards -->
+          </div>
+
+          <!-- Trip History -->
+          <div class="section-divider mt-4">
+            <h3>Trip History & Archive</h3>
+          </div>
+          <div class="table-container card-premium mt-2">
+            <table class="data-table" id="trips-table">
+              <thead>
+                <tr>
+                  <th>Trip ID</th>
+                  <th>Source & Destination</th>
+                  <th>Vehicle</th>
+                  <th>Driver</th>
+                  <th>Cargo Weight</th>
+                  <th>Planned Dist.</th>
+                  <th>Revenue (₹)</th>
+                  <th>Status</th>
+                  <th>Completion Metrics</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="trips-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. MAINTENANCE VIEW -->
+        <section id="view-maintenance" class="view-section">
+          <div class="action-header">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="search-maintenance-input" placeholder="Search by Vehicle or Description...">
+            </div>
+            <button id="log-maintenance-btn" class="btn-primary rbac-write-maintenance">
+              <i data-lucide="wrench"></i> Log Maintenance Work
+            </button>
+          </div>
+
+          <div class="table-container card-premium mt-4">
+            <table class="data-table" id="maintenance-table">
+              <thead>
+                <tr>
+                  <th>Mnt ID</th>
+                  <th>Vehicle</th>
+                  <th>Description</th>
+                  <th>Scheduled Date</th>
+                  <th>Estimated Cost (₹)</th>
+                  <th>Status</th>
+                  <th>Date Logged/Finished</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="maintenance-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 6. EXPENSE TRACKING VIEW -->
+        <section id="view-expenses" class="view-section">
+          <div class="action-header">
+            <div class="search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="search-expense-input" placeholder="Search by Vehicle or Category...">
+            </div>
+            <div class="action-buttons-flex">
+              <button id="log-fuel-btn" class="btn-primary rbac-write-expense">
+                <i data-lucide="fuel"></i> Log Fuel Refill
+              </button>
+              <button id="log-other-expense-btn" class="btn-secondary rbac-write-expense">
+                <i data-lucide="plus-circle"></i> Log Other Expense
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container card-premium mt-4">
+            <table class="data-table" id="expenses-table">
+              <thead>
+                <tr>
+                  <th>Exp ID</th>
+                  <th>Vehicle</th>
+                  <th>Category</th>
+                  <th>Amount (₹)</th>
+                  <th>Fuel Vol (Liters)</th>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 7. REPORTS & ANALYTICS VIEW -->
+        <section id="view-reports" class="view-section">
+          <div class="card-premium">
+            <div class="card-header-flex">
+              <div>
+                <h3>System Reports & CSV Exporter</h3>
+                <p class="text-secondary text-sm">Download filtered or overall dataset records for business analysis.</p>
+              </div>
+              <button id="export-csv-btn" class="btn-primary">
+                <i data-lucide="download"></i> Export Data Package (CSV)
+              </button>
+            </div>
+            
+            <div class="reports-overview-grid mt-4">
+              <div class="report-block">
+                <h4>Core Statistics</h4>
+                <div class="stat-row">
+                  <span>Total Distance Covered:</span>
+                  <strong id="rep-total-distance">0 km</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Total Operational Cost:</span>
+                  <strong id="rep-total-cost">₹0</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Total Fleet Revenue:</span>
+                  <strong id="rep-total-revenue">₹0</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Overall Fleet Profitability:</span>
+                  <strong id="rep-total-profit">₹0</strong>
+                </div>
+              </div>
+              
+              <div class="report-block">
+                <h4>Average Operations</h4>
+                <div class="stat-row">
+                  <span>Average Fuel Efficiency:</span>
+                  <strong id="rep-avg-efficiency">0.0 km/L</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Average Driver Safety Score:</span>
+                  <strong id="rep-avg-safety">0 / 100</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Active Maintenance Load:</span>
+                  <strong id="rep-active-maintenance">0 vehicles</strong>
+                </div>
+                <div class="stat-row">
+                  <span>Average Trip Distance:</span>
+                  <strong id="rep-avg-trip-dist">0 km</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Operational Summary Grid -->
+          <div class="section-divider mt-4">
+            <h3>Vehicle Performance Summary (Distance, Costs, Efficiency & ROI)</h3>
+          </div>
+          <div class="table-container card-premium mt-2">
+            <table class="data-table" id="reports-summary-table">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Type</th>
+                  <th>Distance Run (km)</th>
+                  <th>Fuel Cost (₹)</th>
+                  <th>Maint Cost (₹)</th>
+                  <th>Total Cost (₹)</th>
+                  <th>Avg Efficiency (km/L)</th>
+                  <th>Total Revenue (₹)</th>
+                  <th>Net Profit (₹)</th>
+                  <th>Acquisition Cost (₹)</th>
+                  <th>ROI (%)</th>
+                </tr>
+              </thead>
+              <tbody id="reports-summary-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Dynamic Modals System -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Modal Title</h3>
+        <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Render form fields dynamically via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application Logic -->
+  <script src="data.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>
