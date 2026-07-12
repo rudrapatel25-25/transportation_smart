@@ -1,0 +1,10 @@
+{
+  "name": "transitops",
+  "version": "1.0.0",
+  "description": "Smart Transport Operations Platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server -p 3000"
+  },
+  "dependencies": {}
+}
