@@ -1,0 +1,42 @@
+=== VEHICLES MASTER REGISTRY ===
+Registration Number,Model/Name,Type,Region,Max Load Capacity (kg),Current Odometer (km),Acquisition Cost (INR),Status
+"MH-12-PQ-1234","Tata Ace Gold","Mini Truck","West",800,24730,550000,"In Shop"
+"KA-03-TR-5678","Mahindra Bolero Pik-Up","Pickup","South",1300,49050,880000,"Available"
+"DL-01-XY-9999","Eicher Pro 2049","Light Truck","North",3500,82100,1450000,"Available"
+"GJ-01-AB-1122","Tata Ultra T.7","Heavy Truck","West",4900,112000,1750000,"Retired"
+"Van-05","Maruti Suzuki Super Carry","Van","West",500,12500,400000,"Available"
+"gj08rs1234","tata high","Pickup","South",700,14120,20000,"Available"
+
+=== DRIVERS MASTER REGISTRY ===
+Driver Name,License Number,License Category,Expiry Date,Contact Number,Safety Score,Status
+"Alex","DL-2023089456","LMV","2028-09-15","+91 98765 43210",94,"Available"
+"Rahul Sharma","DL-2021102948","HMV","2027-04-30","+91 87654 32109",88,"Available"
+"Karthik Gowda","DL-2019992384","Trans","2029-12-05","+91 76543 21098",96,"Available"
+"Suresh Kumar","DL-2015003928","HMV","2025-02-14","+91 91122 33445",82,"Off Duty"
+"Vikram Singh","DL-2022091283","LMV","2028-11-20","+91 99887 76655",65,"Suspended"
+
+=== TRIP DISPATCHES & ARCHIVE ===
+Trip ID,Source,Destination,Vehicle Assigned,Driver Assigned,Cargo Weight (kg),Planned Distance (km),Revenue (INR),Status,Fuel Consumed (L),Final Odometer (km)
+"TRIP-1001","Mumbai Warehouse","Pune Distribution Center","KA-03-TR-5678","Rahul Sharma",1100,150,18000,"Completed",450,49050
+"TRIP-1002","Delhi Hub","Gurugram Retail Store","MH-12-PQ-1234","Alex",600,45,6500,"Completed",6,24500
+"TRIP-1003","Bengaluru Depot","Mysuru Warehouse","KA-03-TR-5678","Karthik Gowda",950,145,15000,"Completed",18,48750
+"TRIP-1004","mumbai airport","pune bus stop","MH-12-PQ-1234","Alex",9,230,120000,"Completed",200,24730
+"TRIP-1005","mumbai airport","pune bus stop","gj08rs1234","Rahul Sharma",20,120,1200,"Completed",123,14120
+
+=== VEHICLE MAINTENANCE RECORDS ===
+Maintenance ID,Vehicle Reg,Description,Scheduled Date,Estimated Cost (INR),Status,Completed Date
+"MNT-2001","DL-01-XY-9999","Scheduled Engine Oil & Filter Service","2026-07-10",4500,"Completed","2026-07-12T03:05:00.000Z"
+"MNT-2002","MH-12-PQ-1234","Brake Pad Replacement & Caliper Cleaning","2026-07-05",3200,"Completed","2026-07-05T14:00:00Z"
+"MNT-2003","MH-12-PQ-1234","clearing engine","2026-07-12",3000,"Active",""
+
+=== FLEET OPERATIONAL EXPENSES ===
+Expense ID,Vehicle Reg,Category,Amount (INR),Fuel Volume (Liters),Date,Description
+"EXP-3001","MH-12-PQ-1234","Fuel",600,6,"2026-07-10","Fuel refill for Trip TRIP-1002"
+"EXP-3002","KA-03-TR-5678","Fuel",1800,18,"2026-07-09","Fuel refill for Trip TRIP-1003"
+"EXP-3003","MH-12-PQ-1234","Maintenance",3200,"","2026-07-05","Maintenance service MNT-2002"
+"EXP-3004","KA-03-TR-5678","Toll",350,"","2026-07-11","Highway toll charges"
+"EXP-3005","DL-01-XY-9999","Maintenance",4500,"","2026-07-12","Completed Maintenance Job: Scheduled Engine Oil & Filter Service"
+"EXP-3006","KA-03-TR-5678","Fuel",45000,450,"2026-07-12","Fuel refill of 450L for completed Trip TRIP-1001"
+"EXP-3007","MH-12-PQ-1234","Fuel",20000,200,"2026-07-12","Fuel refill of 200L for completed Trip TRIP-1004"
+"EXP-3008","MH-12-PQ-1234","Fuel",12000,100,"2026-07-12","alll"
+"EXP-3009","gj08rs1234","Fuel",12300,123,"2026-07-12","Fuel refill of 123L for completed Trip TRIP-1005"
